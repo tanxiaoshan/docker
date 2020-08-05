@@ -1,0 +1,43 @@
+version: '2'
+
+services:
+    nginx:
+        image: ${NGINX_IMAGE}
+        volumes:
+           - ${NGINX_VOLUMNE_CONF}:/etc/nginx/nginx.conf
+           - ${NGINX_VOLUMNE_VHOST}:/etc/nginx/conf.d
+           - ${NGINX_PROJECT}:/home/wwwroot:cached
+        restart: always
+        ports:
+           - 80:80
+        depends_on:
+           - php
+    php:
+        image: ${PHP_IMAGE}
+        volumes:
+           - ${PHP_VOLUMNE_PHPINI}:/usr/local/etc/php/php.ini
+           - ${PHP_VOLUME_PROJECT}:/home/wwwroot:cached
+        restart: always
+        depends_on:
+           - mysql
+           - redis
+        # ports:
+        #    - 9000:9000
+    mysql:
+        image: mysql:5.7
+        volumes:
+            - ${MYSQL_VOLUME_DATA}:/var/lib/mysql
+            - ${MYSQL_VOLUME_CONF}:/etc/mysql/conf.d
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+        ports:
+            - 3306:3306
+    redis:
+        image: redis
+        restart: always
+        command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
+        ports:
+             - 6379:6379
+        volumes:
+             - ${REDIS_VOLUME_DATA}:/data
