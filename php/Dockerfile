@@ -2,7 +2,8 @@ FROM php:7.4-fpm
 
 # 设置环境变量
 ENV REDIS_VERSION=5.1.0
-ENV SWOOLE_VERSION=4.4.12
+# ENV SWOOLE_VERSION=4.4.12
+ENV SWOOLE_VERSION=4.5.2
 ENV COMPOSER_VERSION=1.9.1
 ENV PHPNSQ_VERSION=3.5.0
 ENV MONGO_VERSION=1.7.4
@@ -57,7 +58,7 @@ RUN docker-php-ext-install bcmath \
     && docker-php-ext-install sockets \
     && docker-php-ext-install zip
 
-# 安装swoole
+# 安装swoole v4.5.2.tar.gz
 COPY ext/swoole-${SWOOLE_VERSION}.tgz /opt/swoole.tgz
 RUN pecl install /opt/swoole.tgz \
     && docker-php-ext-enable swoole 
