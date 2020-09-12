@@ -1,0 +1,16 @@
+version: '3.0'
+services:
+  logstash: # 相关文档 https://hub.docker.com/_/logstash
+    build:
+      context: .
+      args:
+        - LOGSTASH_VER=7.8.1
+    volumes:
+      - ./config/logstash_master.yml:/usr/share/logstash/config/logstash.yml
+      - ./config/pipeline_master.yml:/usr/share/logstash/config/pipeline.yml
+      - ./pipeline/:/usr/share/logstash/pipeline/
+      - ./logs/logstash/:/usr/share/logstash/logs/
+      - ./data/logstash/:/usr/share/logstash/data/
+    ports:
+      - "5044:5044"
+    restart: always
