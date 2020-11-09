@@ -3,6 +3,5 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/../.." vcs="Git" />
     <mapping directory="$PROJECT_DIR$/magic_console" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/skeleton/magic_console" vcs="Git" />
   </component>
 </project>
