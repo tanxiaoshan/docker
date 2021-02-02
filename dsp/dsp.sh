@@ -1,7 +1,7 @@
 #!/bin/bash
 APPGROUP=dayuwen_server
 APPNAME=tg_game
-CODESPACE=/Users/zhongwenweilai
+CODESPACE=/Users/shershon
 echo "下载gitlab最新代码"
 git clone git@e.coding.net:wework123/middleplat/dsp_frame.git ${CODESPACE}/dsp
 cd ${CODESPACE}/dsp && rm -rf .git
@@ -15,4 +15,4 @@ cd ${CODESPACE}/dsp/conf && rm -rf .git
 git clone git@e.coding.net:wework123/${APPGROUP}/${APPNAME}.git ${CODESPACE}/dsp/app/${APPNAME}
 cd ${CODESPACE}/dsp/app/${APPNAME} && rm -rf .git
 
-chown -R zhongwenweilai:staff ${CODESPACE}/dsp
+chown -R shershon:staff ${CODESPACE}/dsp
