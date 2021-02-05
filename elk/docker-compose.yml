@@ -1,50 +1,38 @@
-version: '3.0'
+version: "3"
 services:
-  elasticsearch: # 相关文档 https://hub.docker.com/_/elasticsearch
-    build:
-      context: ../../services/elasticsearch
-      args:
-        - ES_VER=7.3.2
+  elasticsearch:
+    image: docker.io/elasticsearch:7.5.1
+    container_name: elasticsearch
+    volumes:
+      - /Users/zhongwenweilai/doker/elk/elasticsearch/conf/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - /Users/zhongwenweilai/docker/elk/elasticsearch/data:/usr/share/elasticsearch/data/:rw
+      - /Users/zhongwenweilai/docker/elk/elasticsearch/logs:/usr/share/elasticsearch/logs/:rw
     ports:
       - "9200:9200"
       - "9300:9300"
-    environment:
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - ../../data/elasticsearch/plugins/:/usr/share/elasticsearch/plugins/
-      - ../../data/elasticsearch/:/usr/share/elasticsearch/data/
-      - ../../logs/elasticsearch/:/usr/share/elasticsearch/logs/
-      - ../../services/elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-
-  kibana: # 相关文档 https://hub.docker.com/_/kibana
-    build:
-      context: ../../services/kibana
-      args:
-        - KIBANA_VER=7.3.2 # 版本需要和es保持一致
-    links:
-      - elasticsearch:elasticsearch
-    volumes:
-      - ../../services/kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
-    ports:
-      - "5601:5601"
     restart: always
 
-  logstash: # 相关文档 https://hub.docker.com/_/logstash
-    build:
-      context: ../../services/logstash
-      args:
-        - LOGSTASH_VER=7.3.2
-    links:
-      - elasticsearch:elasticsearch
+  kibana:
+    image: docker.io/kibana:7.5.1
+    container_name: kibana
     volumes:
-      - ../../logs/logstash/:/usr/share/logstash/logs/
-      - ../../data/logstash/:/usr/share/logstash/data/
-      - ../../logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
-      - ../../logstash/config/pipeline.yml:/usr/share/logstash/config/pipeline.yml
-      - ../../services/logstash/pipeline/:/usr/share/logstash/pipeline/
+      - /Users/zhongwenweilai/docker/elk/kibana/conf/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    restart: always
+
+  logstash:
+    image: logstash:7.5.1
+    container_name: logstash
+    command: logstash -f /usr/share/logstash/config/logstash.conf
+    volumes:
+      - /Users/zhongwenweilai/docker/elk/logstash/config/:/usr/share/logstash/config
+      - /Users/zhongwenweilai/docker/elk/logstash/data/:/usr/share/logstash/data
+    ports:
+      - "9600:9600"
+      - "5044:5044"
+    depends_on:
+      - elasticsearch
     restart: always
